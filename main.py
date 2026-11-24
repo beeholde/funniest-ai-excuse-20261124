@@ -13,8 +13,16 @@ ENTRY_TEXT = (
     "Your task gets one line, on page 397."
 )
 
+# The gate refuses any text over 200 characters, so fail loudly here
+# rather than silently shipping an entry the judge never sees.
+MAX_CHARS = 200
+
 
 def main() -> None:
+    if len(ENTRY_TEXT) > MAX_CHARS:
+        raise ValueError(
+            f"entry is {len(ENTRY_TEXT)} characters, over the {MAX_CHARS} limit"
+        )
     output_dir = os.environ.get("OUTPUT_DIR", "/output")
     os.makedirs(output_dir, exist_ok=True)
     path = os.path.join(output_dir, "entry.txt")
